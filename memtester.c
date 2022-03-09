@@ -24,6 +24,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include <errno.h>
+#include <time.h>
 
 #include "types.h"
 #include "sizes.h"
@@ -126,6 +127,8 @@ int main(int argc, char **argv) {
     int device_specified = 0;
     char *env_testmask = 0;
     ul testmask = 0;
+    time_t rawtime;
+    struct tm *info;
 
     printf("memtester version " __version__ " (%d-bit)\n", UL_LEN);
     printf("Copyright (C) 2001-2020 Charles Cazabon.\n");
@@ -383,6 +386,9 @@ int main(int argc, char **argv) {
             printf("/%lu", loops);
         }
         printf(":\n");
+        time(&rawtime);
+        info = localtime(&rawtime);
+        printf("  %s", asctime(info));
         printf("  %-20s: ", "Stuck Address");
         fflush(stdout);
         if (!test_stuck_address(aligned, bufsize / sizeof(ul))) {
